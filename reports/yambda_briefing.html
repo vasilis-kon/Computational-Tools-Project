@@ -1,0 +1,597 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Yambda Project Briefing</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one narrow reading column, numbered sections only where order is real (pipeline, timeline); coloured boxes encode the type of point (green can, red cannot, amber caution, blue info, violet key idea). */
+:root{
+  --bg:#EEF3F4; --surface:#FFFFFF; --ink:#12232B; --muted:#4A5E68; --line:#CBD8DC; --accent:#0E7C86; --accent-ink:#FFFFFF;
+  --blue-bg:#E3EEFB; --blue-bd:#9DBFEA; --blue-fg:#134A8E;
+  --green-bg:#E2F4E8; --green-bd:#8FCBA3; --green-fg:#17622F;
+  --red-bg:#FCE7E5; --red-bd:#E8A29B; --red-fg:#9B2318;
+  --amber-bg:#FFF1D6; --amber-bd:#E5BE6A; --amber-fg:#7A4E00;
+  --violet-bg:#EDE8FA; --violet-bd:#B7A7E6; --violet-fg:#4B2FA0;
+  --hero-bg:#0E2A31; --hero-ink:#EAF4F5; --hero-muted:#A5C2C7;
+  --f-display:'Bricolage Grotesque','Segoe UI',system-ui,sans-serif;
+  --f-body:'IBM Plex Sans','Segoe UI',system-ui,sans-serif;
+  --f-mono:'IBM Plex Mono',ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0B171B; --surface:#13252B; --ink:#E6F0F2; --muted:#9DB3BA; --line:#2A414A; --accent:#4FC3CC; --accent-ink:#06191C;
+  --blue-bg:#12263F; --blue-bd:#2F5C94; --blue-fg:#A9CBF5;
+  --green-bg:#0F2C1B; --green-bd:#2E7048; --green-fg:#9AE0B2;
+  --red-bg:#36161A; --red-bd:#8A3B38; --red-fg:#F4B0AA;
+  --amber-bg:#33270B; --amber-bd:#86661C; --amber-fg:#F2D189;
+  --violet-bg:#231C3E; --violet-bd:#5E4AA6; --violet-fg:#CDBFF5;
+  --hero-bg:#0E2A31; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0B171B; --surface:#13252B; --ink:#E6F0F2; --muted:#9DB3BA; --line:#2A414A; --accent:#4FC3CC; --accent-ink:#06191C;
+  --blue-bg:#12263F; --blue-bd:#2F5C94; --blue-fg:#A9CBF5;
+  --green-bg:#0F2C1B; --green-bd:#2E7048; --green-fg:#9AE0B2;
+  --red-bg:#36161A; --red-bd:#8A3B38; --red-fg:#F4B0AA;
+  --amber-bg:#33270B; --amber-bd:#86661C; --amber-fg:#F2D189;
+  --violet-bg:#231C3E; --violet-bd:#5E4AA6; --violet-fg:#CDBFF5;
+  --hero-bg:#0E2A31; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15.5px;line-height:1.6;margin:0}
+.wrap{max-width:1040px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.1}
+p{margin:0 0 .7em;max-width:68ch}
+p:last-child{margin-bottom:0}
+ul{margin:.3em 0 0;padding-left:1.15em}
+li{margin:.25em 0}
+code,.mono{font-family:var(--f-mono);font-size:.86em}
+code{background:color-mix(in srgb,var(--ink) 8%,transparent);padding:.1em .35em;border-radius:4px}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+
+/* hero */
+.hero{background:var(--hero-bg);color:var(--hero-ink)}
+.hero .wrap{padding-block:44px 36px}
+.hero .eyebrow{color:var(--hero-muted)}
+.hero h1{font-size:clamp(34px,6vw,60px);font-weight:800;letter-spacing:-.02em;margin:10px 0 14px}
+.hero p{color:var(--hero-muted);font-size:17px;max-width:62ch}
+.hero-q{margin-top:22px;border:1px solid #2f5a63;border-radius:10px;padding:14px 16px;background:#0b2227;color:var(--hero-ink);max-width:70ch}
+.hero-q b{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#7fd3da;display:block;margin-bottom:4px;font-weight:500}
+.toc{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.toc a{color:var(--hero-ink);text-decoration:none;border:1px solid #356069;border-radius:999px;padding:5px 13px;font-size:13.5px}
+.toc a:hover,.toc a:focus-visible{background:#1b4650;outline:2px solid #7fd3da;outline-offset:1px}
+
+section{padding-block:46px 6px}
+.sec-head{display:flex;flex-direction:column;gap:6px;margin-bottom:20px}
+.sec-head h2{font-size:clamp(26px,4vw,36px);font-weight:700;letter-spacing:-.01em}
+.sec-head p{color:var(--muted)}
+
+/* boxes */
+.box{--c-bg:var(--blue-bg);--c-bd:var(--blue-bd);--c-fg:var(--blue-fg);
+  background:var(--c-bg);border:1px solid var(--c-bd);border-radius:12px;padding:16px 18px;min-width:0}
+.box>.tag{display:inline-block;font-family:var(--f-mono);font-size:11.5px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--c-fg);border:1px solid var(--c-bd);border-radius:999px;padding:2px 10px;margin-bottom:9px;background:color-mix(in srgb,var(--c-bg) 60%,var(--surface))}
+.box h3{font-size:19px;font-weight:700;color:var(--c-fg);margin-bottom:6px}
+.box.green{--c-bg:var(--green-bg);--c-bd:var(--green-bd);--c-fg:var(--green-fg)}
+.box.red{--c-bg:var(--red-bg);--c-bd:var(--red-bd);--c-fg:var(--red-fg)}
+.box.amber{--c-bg:var(--amber-bg);--c-bd:var(--amber-bd);--c-fg:var(--amber-fg)}
+.box.violet{--c-bg:var(--violet-bg);--c-bd:var(--violet-bd);--c-fg:var(--violet-fg)}
+.box.dashed{border-style:dashed;border-width:2px}
+.box.solid{border-width:2px}
+.box.flat{background:var(--surface);}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.stack{display:flex;flex-direction:column;gap:14px}
+.sub{font-family:var(--f-display);font-size:21px;font-weight:700;margin:30px 0 12px}
+
+/* stats */
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.stat b{display:block;font-family:var(--f-display);font-size:28px;font-weight:800;line-height:1.1;font-variant-numeric:tabular-nums}
+.stat span{font-size:13px;color:var(--muted)}
+.stat.est b::after{content:" est.";font-family:var(--f-mono);font-size:11px;font-weight:500;color:var(--amber-fg)}
+
+/* tables */
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:560px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:500;background:color-mix(in srgb,var(--ink) 4%,var(--surface))}
+tr:last-child td{border-bottom:0}
+td.num{font-variant-numeric:tabular-nums}
+
+/* matrix of can / cannot */
+.mono-list{list-style:none;padding:0;margin:0}
+.mono-list li{padding:6px 0;border-bottom:1px dashed color-mix(in srgb,var(--c-bd) 70%,transparent);margin:0}
+.mono-list li:last-child{border-bottom:0}
+.mono-list b{font-weight:600}
+.pill{display:inline-block;font-family:var(--f-mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;padding:2px 9px;border-radius:999px;border:1px solid var(--line);color:var(--muted);white-space:nowrap}
+.pill.done{background:var(--green-bg);border-color:var(--green-bd);color:var(--green-fg)}
+.pill.part{background:var(--amber-bg);border-color:var(--amber-bd);color:var(--amber-fg)}
+.pill.todo{background:var(--red-bg);border-color:var(--red-bd);color:var(--red-fg)}
+.pill.core{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.pill.stretch{background:transparent;border-style:dashed;color:var(--ink)}
+
+/* RQ cards */
+.rq{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.rq-top{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.rq-id{font-family:var(--f-mono);font-weight:500;font-size:13px;background:var(--ink);color:var(--bg);padding:2px 9px;border-radius:6px}
+.rq h3{font-size:22px;font-weight:700}
+.vs{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:10px;align-items:stretch}
+.vs .box{padding:12px 14px;font-size:14.5px}
+.vs .box h3{font-size:15px;margin:0 0 4px}
+.vs-mid{align-self:center;font-family:var(--f-display);font-weight:800;font-size:15px;color:var(--muted)}
+.cmp{font-size:14.5px;border-top:1px solid var(--line);padding-top:12px;color:var(--ink)}
+.cmp b{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--accent);font-weight:500;margin-right:6px}
+
+/* pipeline flow */
+.flow{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;counter-reset:s}
+.flow .step{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 12px 14px;position:relative;font-size:14px}
+.flow .step::before{counter-increment:s;content:counter(s);display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--accent);color:var(--accent-ink);font-family:var(--f-mono);font-size:12px;margin-bottom:8px}
+.flow .step b{display:block;font-family:var(--f-display);font-size:16px;margin-bottom:2px}
+.flow .step span{color:var(--muted);font-size:13px}
+
+/* scale bars */
+.scale{display:grid;gap:10px}
+.scale .row{display:grid;grid-template-columns:90px minmax(0,1fr);gap:12px;align-items:center;font-size:13.5px}
+.scale .bar{height:26px;border-radius:6px;display:flex;align-items:center;padding-left:9px;font-family:var(--f-mono);font-size:12px;color:var(--accent-ink);background:var(--accent);min-width:max-content}
+.scale .bar.big{background:var(--violet-fg);color:var(--bg)}
+.scale .track{background:color-mix(in srgb,var(--ink) 7%,transparent);border-radius:6px}
+
+/* timeline */
+.tl{min-width:760px}
+.tl th:first-child{width:150px}
+.tl td{font-size:13.5px}
+.tl .wk{display:block;font-weight:600;color:var(--ink);font-family:var(--f-body);text-transform:none;letter-spacing:0;font-size:13px}
+.cell{display:block;border-radius:8px;padding:7px 9px;border:1px solid var(--c-bd);background:var(--c-bg);color:var(--ink)}
+.cell.blue{--c-bg:var(--blue-bg);--c-bd:var(--blue-bd)}
+.cell.green{--c-bg:var(--green-bg);--c-bd:var(--green-bd)}
+.cell.amber{--c-bg:var(--amber-bg);--c-bd:var(--amber-bd)}
+.cell.violet{--c-bg:var(--violet-bg);--c-bd:var(--violet-bd)}
+.cell.red{--c-bg:var(--red-bg);--c-bd:var(--red-bd)}
+.cell.none{--c-bg:transparent;--c-bd:var(--line);color:var(--muted);border-style:dashed}
+.ws-h{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.ws-h .who{font-family:var(--f-mono);font-size:12px;border:1px dashed var(--c-bd);border-radius:6px;padding:1px 8px;color:var(--c-fg)}
+
+.foot{margin-top:56px;border-top:1px solid var(--line);padding-block:22px 40px;color:var(--muted);font-size:13.5px}
+
+@media (max-width:820px){
+  .g3,.g4{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .flow{grid-template-columns:1fr 1fr}
+}
+@media (max-width:620px){
+  .g2,.g3,.g4,.flow{grid-template-columns:1fr}
+  .vs{grid-template-columns:1fr}
+  .vs-mid{text-align:center}
+  .scale .row{grid-template-columns:1fr;gap:4px}
+  section{padding-top:36px}
+}
+@media (max-width:620px){.g4.keep2{grid-template-columns:repeat(2,minmax(0,1fr))}}
+body{margin:0}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Team briefing · written 9 Nov 2026 · hand-in 4 Dec 2026 (25 days)</div>
+    <h1>Yambda: what we hold, what we can ask, how we split the work</h1>
+    <p>A shared reference for the whole team. It covers what the data is and is not, the research questions we can answer with two competing methods each, why we build on the 50M sample before the 500M set, and who does what before the deadline.</p>
+    <div class="hero-q">
+      <b>Our main question</b>
+      For the same users, is what the recommender plays broader or narrower than what they choose themselves?
+    </div>
+    <nav class="toc" aria-label="Sections">
+      <a href="#data">1 · Our data</a>
+      <a href="#rq">2 · Questions and methods</a>
+      <a href="#pipeline">3 · 50M first, then 500M</a>
+      <a href="#plan">4 · Tasks and schedule</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+<!-- TL;DR -->
+<section style="padding-top:34px">
+  <div class="grid g3">
+    <div class="box green solid"><span class="tag">Done</span><h3>50M analysis works</h3><p>Three notebooks, three self-written methods (MinHash/LSH, A-Priori/PCY, spherical k-means), each checked against a reference implementation.</p></div>
+    <div class="box violet solid"><span class="tag">Finding so far</span><h3>Broader in artists, narrower in sound</h3><p>Recommended listening has more distinct artists but covers less of the audio space. Effects are modest and are associations, not causes.</p></div>
+    <div class="box red solid"><span class="tag">Blocker</span><h3>500M does not fit in memory</h3><p>Roughly 466M listens would need 30 GB or more (not measured). The machine has 15 GB. We must process by user partition and merge.</p></div>
+  </div>
+</section>
+
+<!-- 1 DATA -->
+<section id="data">
+  <div class="sec-head">
+    <span class="eyebrow">Section 1</span>
+    <h2>Our data</h2>
+    <p>Yambda is a log of real listening on Yandex Music. Everything is anonymised, so we know <em>what was played, when, and how it got to the user</em>, but very little about <em>what the music is</em>.</p>
+  </div>
+
+  <div class="grid g4 keep2" style="margin-bottom:14px">
+    <div class="stat"><b>10,000</b><span>users in the 50M sample</span></div>
+    <div class="stat"><b>46.5M</b><span>listens (47.8M events in total)</span></div>
+    <div class="stat"><b>934k</b><span>distinct tracks listened</span></div>
+    <div class="stat"><b>301 days</b><span>time span of the log</span></div>
+  </div>
+
+  <div class="box blue">
+    <span class="tag">Fixed version</span>
+    <p>Hugging Face <code>yandex/yambda</code>, pinned to revision <code>dd6f3a19…448</code>, so everyone works on identical files. 50M is already on disk. 500M is a separate 3.84 GB file that is <strong>not downloaded yet</strong>.</p>
+  </div>
+
+  <h3 class="sub">What is in the files</h3>
+  <div class="tbl">
+    <table>
+      <thead><tr><th>File</th><th>Contents</th><th>Size / coverage</th></tr></thead>
+      <tbody>
+        <tr><td><code>flat/50m/multi_event.parquet</code></td><td>One row per event: user ID, track ID, timestamp, event type (<em>listen, like, unlike, dislike, undislike</em>), <code>is_organic</code>, and for listens the percent played and track length.</td><td class="num">47.8M rows, 10,000 users, sorted by user and time</td></tr>
+        <tr><td><code>artist_item_mapping.parquet</code></td><td>Track ID → anonymous artist ID.</td><td class="num">1.29M artists; covers 99.98% of listens</td></tr>
+        <tr><td><code>album_item_mapping.parquet</code></td><td>Track ID → anonymous album ID.</td><td class="num">3.37M albums; covers 100% of listens</td></tr>
+        <tr><td><code>embeddings.parquet</code></td><td>128-number audio vector per track, describing how it sounds. Our only description of the music itself.</td><td class="num">7.7M tracks; covers 96.9% of listens (13.8 GB)</td></tr>
+        <tr><td><code>data/processed/emb50m_*.npy</code></td><td>The embeddings of the 848k tracks that occur in 50M, as float32, ready to load.</td><td class="num">small, fits in RAM</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 class="sub">The one flag the project is built on</h3>
+  <div class="grid g2">
+    <div class="box violet solid">
+      <span class="tag">is_organic</span>
+      <h3>1 = the user chose it. 0 = the recommender served it.</h3>
+      <p>Behaviour supports the dataset card: 65% of the first listens of a (user, track) pair arrive through recommendation, and 77% of organic listens are repeats. Recommended listens are played longer on average (69.6% vs 60.2%) but liked less (16.9 vs 20.9 likes per 1,000).</p>
+    </div>
+    <div class="box amber dashed">
+      <span class="tag">Careful</span>
+      <h3>"Organic" includes replays of recommended tracks</h3>
+      <p>A track discovered through a recommendation and replayed later counts as organic the second time. So organic is not "pure taste". We must say this in the report and decide whether we count first discovery or every play.</p>
+    </div>
+  </div>
+
+  <h3 class="sub">What we can and cannot do</h3>
+  <div class="grid g2">
+    <div class="box green">
+      <span class="tag">We can</span>
+      <ul class="mono-list">
+        <li><b>Compare the two streams</b> for the same users (organic vs recommended).</li>
+        <li><b>Measure diversity by artist</b> (distinct artists, entropy) using artist IDs.</li>
+        <li><b>Measure diversity by sound</b> (audio spread, k-means pseudo-genres) using embeddings.</li>
+        <li><b>Build sessions</b> (30 min gap) and study what is played together: 2.45M sessions.</li>
+        <li><b>Find similar users or tracks</b> by shared listening (MinHash/LSH) or by sound.</li>
+        <li><b>Follow behaviour over the 301 days</b>: 4,334 users have enough organic listens in both the first and last third.</li>
+        <li><b>Use feedback signals</b>: likes, dislikes, percent played, as a measure of acceptance.</li>
+        <li><b>Test scaling</b> honestly, since we have two sizes of the same data.</li>
+      </ul>
+    </div>
+    <div class="box red">
+      <span class="tag">We cannot</span>
+      <ul class="mono-list">
+        <li><b>No genre labels.</b> We can only build "pseudo-genres" by clustering sound. They are not "rock" or "jazz".</li>
+        <li><b>No names.</b> Artists, albums and tracks are anonymous IDs. We cannot name a recommendation or check one by ear.</li>
+        <li><b>No impressions.</b> We never see what was shown and ignored, so no click-through rate and no model of "why not this one".</li>
+        <li><b>No recommender details.</b> We do not know which algorithm or what it optimises.</li>
+        <li><b>No user details.</b> No age, country, device or context.</li>
+        <li><b>No calendar time.</b> Timestamps are seconds since the start (5 s bins), so no weekday, season or time-of-day effects.</li>
+        <li><b>No causal claims.</b> Users who accept recommendations differ from those who do not. We report associations.</li>
+        <li><b>No lyrics or text.</b> Sound is the only content signal, and 3% of listens have no embedding.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 class="sub">Fairness rules used in every comparison</h3>
+  <div class="grid g4 keep2">
+    <div class="box flat blue"><h3>Real listens</h3><p>Only plays of at least 50% of the track.</p></div>
+    <div class="box flat blue"><h3>Distinct tracks</h3><p>Count each track once, not every play.</p></div>
+    <div class="box flat blue"><h3>Same users</h3><p>Both streams come from the same people.</p></div>
+    <div class="box flat blue"><h3>Equal sizes</h3><p>Equal sample sizes and basket-size distributions.</p></div>
+  </div>
+  <div class="box amber" style="margin-top:14px">
+    <span class="tag">Watch out</span>
+    <p>Not every user is usable. Only <strong>6,628 of 9,238</strong> users have at least 50 real listens in both streams. Effect sizes are modest (+17% artists, −6% audio spread, about 2 of 15 genres). The tiny p-values come from sample size, so always report effect sizes and intervals next to them.</p>
+  </div>
+</section>
+
+<!-- 2 RQ -->
+<section id="rq">
+  <div class="sec-head">
+    <span class="eyebrow">Section 2</span>
+    <h2>Research questions and method pairs</h2>
+    <p>Each question has two methods that can answer it. We run both and compare the answers: when they agree, the finding is stronger; when they disagree, that is a result in itself. Status refers to the 50M sample.</p>
+  </div>
+
+  <div class="stack">
+
+    <article class="rq">
+      <div class="rq-top"><span class="rq-id">RQ1</span><span class="pill core">Core</span><span class="pill done">Done on 50M</span></div>
+      <h3>Are recommended listens broader or narrower than organic ones?</h3>
+      <div class="vs">
+        <div class="box green"><h3>Method A · Diversity statistics</h3><p>Per user: distinct artists per 100 tracks, entropy of the artist distribution, mean audio spread.</p></div>
+        <div class="vs-mid">vs</div>
+        <div class="box blue"><h3>Method B · Pseudo-genre coverage</h3><p>Own spherical k-means on embeddings (k=32): genres per user and share of tracks in genres the user never picks in the other stream.</p></div>
+      </div>
+      <div class="cmp"><b>What we compare</b>Do the artist view and the sound view point the same way? So far they do not: artists broader (+11 per 100 tracks), sound narrower (13 vs 15 genres). The report question is whether this holds at 500M.</div>
+    </article>
+
+    <article class="rq">
+      <div class="rq-top"><span class="rq-id">RQ2</span><span class="pill core">Core</span><span class="pill done">Done on 50M</span></div>
+      <h3>Do recommendations make users more alike?</h3>
+      <div class="vs">
+        <div class="box green"><h3>Method A · MinHash / LSH on track sets</h3><p>Users are similar if they listened to the same tracks (Jaccard). LSH finds likely pairs without comparing all pairs.</p></div>
+        <div class="vs-mid">vs</div>
+        <div class="box blue"><h3>Method B · Cosine on sound profiles</h3><p>Users are similar if the average embedding of their tracks points the same way. Optional: nearest-neighbour "twin" per user.</p></div>
+      </div>
+      <div class="cmp"><b>What we compare</b>Similarity by shared tracks vs by shared sound, in each stream. 50M result is mixed: slightly lower mean similarity in the recommended stream, yet 75% of users have a closer twin there.</div>
+    </article>
+
+    <article class="rq">
+      <div class="rq-top"><span class="rq-id">RQ3</span><span class="pill core">Core</span><span class="pill part">Itemsets done, link missing</span></div>
+      <h3>Which tracks are played together, and do they sound alike?</h3>
+      <div class="vs">
+        <div class="box green"><h3>Method A · Frequent itemsets (A-Priori / PCY)</h3><p>Sessions are baskets. Find frequent pairs and their lift in each stream.</p></div>
+        <div class="vs-mid">vs</div>
+        <div class="box blue"><h3>Method B · Embedding neighbours / session coherence</h3><p>Nearest neighbours in sound space and mean within-session similarity.</p></div>
+      </div>
+      <div class="cmp"><b>What we compare</b>Do the top co-listened pairs lie in the same pseudo-genre more often than random pairs? Equal number of frequent pairs in both streams so far; typical lift higher in the recommended one; sessions more varied there (coherence 0.417 vs 0.477).</div>
+    </article>
+
+    <article class="rq">
+      <div class="rq-top"><span class="rq-id">RQ4</span><span class="pill stretch">Stretch</span><span class="pill todo">Not started</span></div>
+      <h3>Are the "pseudo-genres" real structure, or an artefact of k-means?</h3>
+      <div class="vs">
+        <div class="box green"><h3>Method A · Spherical k-means</h3><p>Already written and validated against scikit-learn (ARI about 0.7).</p></div>
+        <div class="vs-mid">vs</div>
+        <div class="box blue"><h3>Method B · Graph communities (Louvain)</h3><p>Track or artist co-listening graph, community detection. Covers the graph week of the course.</p></div>
+      </div>
+      <div class="cmp"><b>What we compare</b>Agreement between the two groupings (ARI, overlap) and whether RQ1 conclusions change when genres come from the graph instead of sound. This tests our central measurement.</div>
+    </article>
+
+    <article class="rq">
+      <div class="rq-top"><span class="rq-id">RQ5</span><span class="pill stretch">Stretch</span><span class="pill todo">Not started</span></div>
+      <h3>Does the effect change over time?</h3>
+      <div class="vs">
+        <div class="box green"><h3>Method A · Windowed diversity</h3><p>Repeat the RQ1 measures in first vs last third (or monthly windows) for users with enough data.</p></div>
+        <div class="vs-mid">vs</div>
+        <div class="box blue"><h3>Method B · Embedding drift</h3><p>Distance between a user's average sound in early and late windows, per stream.</p></div>
+      </div>
+      <div class="cmp"><b>What we compare</b>Do users move more in sound than in artists, and does the recommended stream move them further? 4,334 users qualify on 50M; more on 500M.</div>
+    </article>
+
+    <article class="rq">
+      <div class="rq-top"><span class="rq-id">RQ6</span><span class="pill core">Core</span><span class="pill part">Validated on 50M only</span></div>
+      <h3>How much accuracy do we lose when we approximate to scale?</h3>
+      <div class="vs">
+        <div class="box green"><h3>Method A · Exact baseline</h3><p>Exact Jaccard in blocks; A-Priori / naive counting.</p></div>
+        <div class="vs-mid">vs</div>
+        <div class="box blue"><h3>Method B · Scalable approximation</h3><p>MinHash/LSH banding; PCY and SON for itemsets.</p></div>
+      </div>
+      <div class="cmp"><b>What we compare</b>Recall, error, wall time and peak memory at 50M and 500M. On 50M: LSH recall 0.87–0.90 checking 4% of pairs; PCY counts about 100x fewer candidates with identical results. Hypothesis: counting about linear, exact Jaccard about quadratic, LSH in between.</div>
+    </article>
+
+    <article class="rq">
+      <div class="rq-top"><span class="rq-id">RQ7</span><span class="pill stretch">Stretch</span><span class="pill todo">Not started</span><span class="pill stretch">Outside method</span></div>
+      <h3>Are accepted recommendations close to a user's taste in sound or in behaviour?</h3>
+      <div class="vs">
+        <div class="box green"><h3>Method A · Distance to taste in sound</h3><p>Cosine distance of a recommended track to the user's organic average; predict "played ≥ 50%" with logistic regression.</p></div>
+        <div class="vs-mid">vs</div>
+        <div class="box blue"><h3>Method B · ALS collaborative factors</h3><p>Matrix factorisation on user-track listens; same prediction task using behavioural closeness.</p></div>
+      </div>
+      <div class="cmp"><b>What we compare</b>Which closeness predicts acceptance better. Fills the "outside method" slot if the brief requires one. Drop first if time runs short.</div>
+    </article>
+
+  </div>
+
+  <div class="box amber" style="margin-top:16px">
+    <span class="tag">Decision needed this week</span>
+    <p>The notes say to confirm the formal brief: how many course methods, whether a distributed framework is required, report length, and whether an outside method is needed. <strong>Proposal:</strong> RQ1, RQ2, RQ3 and RQ6 are the core story (MinHash/LSH, A-Priori/PCY, k-means). With five people, RQ4, RQ5 and RQ7 each get an owner as stretch work. RQ4 matters most because it adds the graph week and tests our measurements. RQ7 is cut first if we are behind on 27 Nov.</p>
+  </div>
+</section>
+
+<!-- 3 PIPELINE -->
+<section id="pipeline">
+  <div class="sec-head">
+    <span class="eyebrow">Section 3</span>
+    <h2>Build on 50M, then scale to 500M</h2>
+    <p>The same code runs on both sizes. 50M is where we make it correct. 500M is where we show it scales.</p>
+  </div>
+
+  <h3 class="sub" style="margin-top:0">The pipeline (one pattern for every method)</h3>
+  <div class="flow">
+    <div class="step"><b>Partition</b><span>Read the parquet one block of 2,500–10,000 users at a time.</span></div>
+    <div class="step"><b>Compute</b><span>Per user or per session: diversity, spread, baskets, signatures.</span></div>
+    <div class="step"><b>Save small</b><span>Write additive per-partition results as Parquet.</span></div>
+    <div class="step"><b>Merge</b><span>Sum counts, union candidates, one exact counting pass (SON).</span></div>
+    <div class="step"><b>Plot</b><span>Notebooks only read results and draw figures.</span></div>
+  </div>
+  <p style="margin-top:12px;color:var(--muted)">This works because every quantity we compute belongs to one user or one session. It is the MapReduce / SON idea from the course, so it also serves as the "scaling" content of the report.</p>
+
+  <h3 class="sub">Why the small dataset comes first</h3>
+  <div class="grid g3">
+    <div class="box green"><span class="tag">Speed</span><h3>Fast mistakes</h3><p>A 50M run takes minutes. We can break things and fix them many times before one 500M run costs hours.</p></div>
+    <div class="box violet"><span class="tag">Correctness</span><h3>A test with a known answer</h3><p>The 50M results already exist. If the 50M users are a subset of the 500M users, the 500M pipeline must reproduce them exactly for those users. This is our best test of the code.</p></div>
+    <div class="box blue"><span class="tag">Tuning</span><h3>Settings chosen cheaply</h3><p>LSH bands and rows, support thresholds, k for k-means, partition size: tune on 50M, then fix them for 500M.</p></div>
+    <div class="box amber"><span class="tag">Contracts</span><h3>Agree the interfaces</h3><p>Five people can only work in parallel if the input and output format of each step is fixed. 50M lets us settle that first.</p></div>
+    <div class="box red"><span class="tag">Risk</span><h3>Find the memory wall early</h3><p>We have 15.2 GB RAM (about 5.5 GB free with other apps open). Measuring peak memory per partition on 50M tells us the safe partition size for 500M.</p></div>
+    <div class="box green"><span class="tag">Report</span><h3>A scaling story for free</h3><p>Same method, two sizes, timings recorded: that gives the scaling curves and the "does the conclusion hold" check without extra work.</p></div>
+  </div>
+
+  <h3 class="sub">What changes at 500M</h3>
+  <div class="tbl">
+    <table>
+      <thead><tr><th>Item</th><th>50M (now)</th><th>500M</th><th>How we handle it</th></tr></thead>
+      <tbody>
+        <tr><td>Listens</td><td class="num">46.5M</td><td class="num">about 466M</td><td>Process by user partition, never load everything.</td></tr>
+        <tr><td>Users</td><td class="num">10,000</td><td class="num">about 60,000 (estimate)</td><td>Check whether the 50M users are a subset.</td></tr>
+        <tr><td>Tracks with embeddings</td><td class="num">848k</td><td class="num">about 3M</td><td>Extract once; fit k-means on a sample, assign all tracks.</td></tr>
+        <tr><td>Memory if loaded whole</td><td class="num">fits</td><td class="num">30 GB or more (not measured)</td><td>Partitions; keep one run under about 8 GB.</td></tr>
+        <tr><td>User-pair similarity matrix</td><td class="num">about 35M entries</td><td class="num">about 3.5B (estimate)</td><td>Dense matrix is infeasible. Use LSH; exact baseline in blocks to measure recall.</td></tr>
+        <tr><td>Candidate pairs from LSH</td><td class="num">baseline</td><td class="num">about 100x more</td><td>More selective (b, r) setting.</td></tr>
+        <tr><td>Itemset baskets</td><td class="num">483M pair slots (recommended)</td><td class="num">much larger</td><td>SON with local thresholds; global count of basket sizes first to match streams.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 class="sub">Size of the problem</h3>
+  <div class="box flat" style="border-color:var(--line)">
+    <div class="scale" role="img" aria-label="Bar chart: 500M has about ten times more listens than 50M">
+      <div class="row"><span>50M</span><div class="track"><div class="bar" style="width:10%">46.5M listens</div></div></div>
+      <div class="row"><span>500M</span><div class="track"><div class="bar big" style="width:100%">about 466M listens</div></div></div>
+    </div>
+    <p style="margin-top:10px;font-size:13.5px;color:var(--muted)">Listens are 10x larger. Exact all-pairs work grows with the square of the users, which is why the similarity matrix grows about 100x.</p>
+  </div>
+
+  <div class="grid g2" style="margin-top:14px">
+    <div class="box violet solid">
+      <span class="tag">Phase order</span>
+      <h3>What we run, in order</h3>
+      <ul>
+        <li><b>Phase 0</b> Download 500M (the lead's script), extract embeddings for its tracks, check the user subset.</li>
+        <li><b>Phase 1</b> Move heavy notebook code into one shared module and scripts.</li>
+        <li><b>Phase 2</b> Re-run each method partitioned.</li>
+        <li><b>Phase 3</b> Scaling experiments: 50M vs 500M, partition sizes, 1–4 workers; log time and peak memory.</li>
+        <li><b>Phase 4</b> Check conclusions at 500M with effect sizes and intervals.</li>
+      </ul>
+    </div>
+    <div class="box red dashed">
+      <span class="tag">Don't</span>
+      <h3>Pitfalls to avoid</h3>
+      <ul>
+        <li>Do not tune settings on 500M. Every long run must be justified by a 50M test.</li>
+        <li>Do not keep logic in notebooks. Notebooks plot, modules compute.</li>
+        <li>Do not run several heavy jobs at once. One run under about 8 GB.</li>
+        <li>Do not report a 500M result without the matching 50M number next to it.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 4 PLAN -->
+<section id="plan">
+  <div class="sec-head">
+    <span class="eyebrow">Section 4</span>
+    <h2>Task split and schedule to 4 December</h2>
+    <p>25 days, four working weeks counting the final one. Five people, five workstreams. The project lead handles the 500M download script, so it is not a task below. Put names where you see "name".</p>
+  </div>
+
+  <div class="grid g2">
+    <div class="box blue solid">
+      <div class="ws-h"><h3>A · Pipeline and scaling</h3><span class="who">name: ____</span></div>
+      <p>Embeddings for 500M, user subset check, partition reader, shared module, run logging (time, peak memory), then the scaling runs.</p>
+      <p><b>Owns:</b> Phase 0, Phase 1, Phase 3 timings.</p>
+    </div>
+    <div class="box green solid">
+      <div class="ws-h"><h3>B · Diversity and sound</h3><span class="who">name: ____</span></div>
+      <p>Artist diversity, audio spread, k-means pseudo-genres, session coherence at 500M. RQ1, then RQ5 (drift over time, stretch).</p>
+      <p><b>Owns:</b> RQ1, RQ5 and the sound figures.</p>
+    </div>
+    <div class="box amber solid">
+      <div class="ws-h"><h3>C · Similarity and itemsets</h3><span class="who">name: ____</span></div>
+      <p>MinHash/LSH with exact baseline, user similarity, A-Priori/PCY/SON, link between pairs and sound. RQ2, RQ3, RQ6.</p>
+      <p><b>Owns:</b> RQ2, RQ3, RQ6 and the accuracy-vs-cost table.</p>
+    </div>
+    <div class="box red solid">
+      <div class="ws-h"><h3>D · New methods (stretch)</h3><span class="who">name: ____</span></div>
+      <p>Graph communities with Louvain (RQ4) and ALS as the outside method (RQ7). Starts on 50M, moves to 500M only if the earlier results are on time. Also supports A and C by testing the shared module.</p>
+      <p><b>Owns:</b> RQ4, RQ7. First to be cut, so keep the scope small.</p>
+    </div>
+    <div class="box violet solid" style="grid-column:1/-1">
+      <div class="ws-h"><h3>E · Report and decisions</h3><span class="who">name: ____</span></div>
+      <p>Confirm the formal brief, fix the storyline, collect results from A–D, own the report skeleton, figure style and references.</p>
+      <p><b>Owns:</b> brief check, report, final proofreading.</p>
+    </div>
+  </div>
+
+  <h3 class="sub">Schedule</h3>
+  <div class="tbl">
+    <table class="tl">
+      <thead>
+        <tr>
+          <th>Workstream</th>
+          <th><span class="wk">Week 1 · 9–15 Nov</span>Set up</th>
+          <th><span class="wk">Week 2 · 16–22 Nov</span>Run at 500M</th>
+          <th><span class="wk">Week 3 · 23–29 Nov</span>Scale and check</th>
+          <th><span class="wk">Week 4 · 30 Nov–4 Dec</span>Finish</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><b>A</b> Pipeline and scaling</td>
+          <td><span class="cell blue">Extract embeddings once 500M is in. Subset check. Shared module skeleton.</span></td>
+          <td><span class="cell blue">Partition reader live. Per-partition output format fixed. Support B and C.</span></td>
+          <td><span class="cell violet">Scaling runs: 50M vs 500M, partition sizes, 1–4 workers.</span></td>
+          <td><span class="cell none">Reproducibility README. Help with figures.</span></td>
+        </tr>
+        <tr>
+          <td><b>B</b> Diversity and sound</td>
+          <td><span class="cell green">Move RQ1 code from notebooks 02–03 into the module. Tests on 50M.</span></td>
+          <td><span class="cell green">RQ1 at 500M. Fit k-means on a sample, assign all tracks.</span></td>
+          <td><span class="cell violet">Robustness checks and intervals. RQ5 drift windows if on track.</span></td>
+          <td><span class="cell none">Final figures for RQ1 and RQ5.</span></td>
+        </tr>
+        <tr>
+          <td><b>C</b> Similarity and itemsets</td>
+          <td><span class="cell amber">Move MinHash/LSH and A-Priori/PCY into the module. Block-wise exact baseline.</span></td>
+          <td><span class="cell amber">SON itemsets at 500M. LSH with a more selective (b, r).</span></td>
+          <td><span class="cell violet">Recall vs time table (RQ6). Pair-to-sound link (RQ3).</span></td>
+          <td><span class="cell none">Final figures for RQ2, RQ3, RQ6.</span></td>
+        </tr>
+        <tr>
+          <td><b>D</b> New methods (stretch)</td>
+          <td><span class="cell red">Build the track co-listening graph on 50M. Test the shared module.</span></td>
+          <td><span class="cell red">Louvain on 50M (RQ4). Prepare ALS on 50M (RQ7).</span></td>
+          <td><span class="cell violet">Compare Louvain with k-means. Run on 500M only if time allows.</span></td>
+          <td><span class="cell none">Final figures for RQ4, RQ7.</span></td>
+        </tr>
+        <tr>
+          <td><b>E</b> Report and decisions</td>
+          <td><span class="cell violet">Confirm brief. Lock core vs stretch RQs. Report outline and style.</span></td>
+          <td><span class="cell violet">Write data, methods and 50M results sections.</span></td>
+          <td><span class="cell violet">Draft full report. Collect 500M results as they arrive.</span></td>
+          <td><span class="cell green">Integrate, proofread, submit by 4 Dec.</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 class="sub">Fixed dates</h3>
+  <div class="grid g4 keep2">
+    <div class="box blue"><span class="tag">12 Nov</span><p>Brief confirmed. Core RQs locked. Download script ready and running.</p></div>
+    <div class="box green"><span class="tag">15 Nov</span><p>Shared module and per-partition format agreed. All methods run on 50M through it.</p></div>
+    <div class="box amber"><span class="tag">22 Nov</span><p>First full 500M result for every core method.</p></div>
+    <div class="box red solid"><span class="tag">27 Nov · freeze</span><p>Code frozen. After this, only the results already produced go into the report. 29 Nov: figures final.</p></div>
+  </div>
+
+  <div class="grid g2" style="margin-top:14px">
+    <div class="box green dashed">
+      <span class="tag">Working rules</span>
+      <ul>
+        <li>One shared module. Notebooks import it, never copy it.</li>
+        <li>Every result file carries the dataset size, settings and run time.</li>
+        <li>Short daily check-in: what finished, what is blocked, what runs on the machine.</li>
+        <li>Only one person runs a heavy job on a shared machine at a time.</li>
+      </ul>
+    </div>
+    <div class="box red dashed">
+      <span class="tag">If we slip: cut in this order</span>
+      <ol style="margin:.3em 0 0;padding-left:1.2em">
+        <li>RQ7 (ALS, outside method)</li>
+        <li>RQ5 (drift over time)</li>
+        <li>RQ4 (Louvain). Keep the k-means validation.</li>
+        <li>Worker-count scaling. Keep 50M vs 500M timing.</li>
+      </ol>
+      <p style="margin-top:8px">Never cut: RQ1, RQ2, RQ3 at 500M and the 50M vs 500M comparison.</p>
+    </div>
+  </div>
+
+  <div class="box violet" style="margin-top:14px">
+    <span class="tag">What the report must show</span>
+    <p>(1) The data and its limits, as in Section 1. (2) For each core question, both methods and whether they agree. (3) The pipeline and why partitioning was needed. (4) Scaling curves and the accuracy cost of approximation. (5) Conclusions at 500M with effect sizes, stated as associations.</p>
+  </div>
+</section>
+
+<footer class="foot">
+  Sources: PROJECT_NOTES.md (updated 8 Nov 2026) and outputs/day1_profile.txt. Figures marked "estimate" are planning numbers from the notes, not measurements. Team of five; names are placeholders to fill in.
+</footer>
+
+</main>
+</body>
+</html>

@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Yambda Data Guide</title>
+<style>
+:root{
+  --bg:#EEF3F4; --surface:#FFFFFF; --ink:#12232B; --muted:#4A5E68; --line:#CBD8DC; --accent:#0E7C86; --accent-ink:#FFFFFF;
+  --code-bg:#0E2A31; --code-ink:#E6F0F2;
+  --blue-bg:#E3EEFB; --blue-bd:#9DBFEA; --blue-fg:#134A8E;
+  --green-bg:#E2F4E8; --green-bd:#8FCBA3; --green-fg:#17622F;
+  --red-bg:#FCE7E5; --red-bd:#E8A29B; --red-fg:#9B2318;
+  --amber-bg:#FFF1D6; --amber-bd:#E5BE6A; --amber-fg:#7A4E00;
+  --violet-bg:#EDE8FA; --violet-bd:#B7A7E6; --violet-fg:#4B2FA0;
+  --hero-bg:#0E2A31; --hero-ink:#EAF4F5; --hero-muted:#A5C2C7;
+  --f-body:'Segoe UI',system-ui,-apple-system,sans-serif;
+  --f-mono:ui-monospace,'Cascadia Mono',Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0B171B; --surface:#13252B; --ink:#E6F0F2; --muted:#9DB3BA; --line:#2A414A; --accent:#4FC3CC; --accent-ink:#06191C;
+  --code-bg:#081417;
+  --blue-bg:#12263F; --blue-bd:#2F5C94; --blue-fg:#A9CBF5;
+  --green-bg:#0F2C1B; --green-bd:#2E7048; --green-fg:#9AE0B2;
+  --red-bg:#36161A; --red-bd:#8A3B38; --red-fg:#F4B0AA;
+  --amber-bg:#33270B; --amber-bd:#86661C; --amber-fg:#F2D189;
+  --violet-bg:#231C3E; --violet-bd:#5E4AA6; --violet-fg:#CDBFF5; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0B171B; --surface:#13252B; --ink:#E6F0F2; --muted:#9DB3BA; --line:#2A414A; --accent:#4FC3CC; --accent-ink:#06191C;
+  --code-bg:#081417;
+  --blue-bg:#12263F; --blue-bd:#2F5C94; --blue-fg:#A9CBF5;
+  --green-bg:#0F2C1B; --green-bd:#2E7048; --green-fg:#9AE0B2;
+  --red-bg:#36161A; --red-bd:#8A3B38; --red-fg:#F4B0AA;
+  --amber-bg:#33270B; --amber-bd:#86661C; --amber-fg:#F2D189;
+  --violet-bg:#231C3E; --violet-bd:#5E4AA6; --violet-fg:#CDBFF5; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15.5px;line-height:1.6;margin:0}
+.wrap{max-width:980px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{margin:0;line-height:1.15}
+p{margin:0 0 .7em;max-width:70ch}
+ul,ol{margin:.3em 0 0;padding-left:1.2em}
+li{margin:.25em 0}
+code{font-family:var(--f-mono);font-size:.86em;background:color-mix(in srgb,var(--ink) 8%,transparent);padding:.1em .35em;border-radius:4px}
+pre{background:var(--code-bg);color:var(--code-ink);border-radius:10px;padding:12px 14px;overflow-x:auto;font-family:var(--f-mono);font-size:13px;line-height:1.5;margin:10px 0}
+pre code{background:none;padding:0;font-size:inherit}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.hero{background:var(--hero-bg);color:var(--hero-ink)}
+.hero .wrap{padding-block:40px 30px}
+.hero .eyebrow{color:var(--hero-muted)}
+.hero h1{font-size:clamp(30px,5.5vw,52px);font-weight:800;letter-spacing:-.02em;margin:10px 0 12px}
+.hero p{color:var(--hero-muted);font-size:17px}
+.hero-q{margin-top:18px;border:1px solid #2f5a63;border-radius:10px;padding:12px 16px;background:#0b2227;color:var(--hero-ink);max-width:70ch}
+.toc{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.toc a{color:var(--hero-ink);text-decoration:none;border:1px solid #356069;border-radius:999px;padding:5px 13px;font-size:13.5px}
+.toc a:hover,.toc a:focus-visible{background:#1b4650;outline:2px solid #7fd3da}
+section{padding-block:40px 4px}
+.sec-head{margin-bottom:16px}
+.sec-head h2{font-size:clamp(24px,4vw,32px);font-weight:700;margin-top:4px}
+.sec-head p{color:var(--muted);margin-top:6px}
+.sub{font-size:20px;font-weight:700;margin:26px 0 10px}
+.box{--c-bg:var(--blue-bg);--c-bd:var(--blue-bd);--c-fg:var(--blue-fg);background:var(--c-bg);border:1px solid var(--c-bd);border-radius:12px;padding:14px 18px;min-width:0}
+.box.green{--c-bg:var(--green-bg);--c-bd:var(--green-bd);--c-fg:var(--green-fg)}
+.box.red{--c-bg:var(--red-bg);--c-bd:var(--red-bd);--c-fg:var(--red-fg)}
+.box.amber{--c-bg:var(--amber-bg);--c-bd:var(--amber-bd);--c-fg:var(--amber-fg)}
+.box.violet{--c-bg:var(--violet-bg);--c-bd:var(--violet-bd);--c-fg:var(--violet-fg)}
+.box>.tag{display:inline-block;font-family:var(--f-mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--c-fg);border:1px solid var(--c-bd);border-radius:999px;padding:2px 10px;margin-bottom:8px}
+.box h3{font-size:18px;color:var(--c-fg);margin-bottom:6px}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:560px}
+th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:500;background:color-mix(in srgb,var(--ink) 4%,var(--surface))}
+tr:last-child td{border-bottom:0}
+.steps{list-style:none;padding:0;counter-reset:s}
+.steps>li{counter-increment:s;position:relative;padding-left:40px;margin:14px 0}
+.steps>li::before{content:counter(s);position:absolute;left:0;top:0;width:28px;height:28px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-family:var(--f-mono);font-size:13px}
+.rq{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:18px}
+.rq h3{font-size:21px;margin:8px 0 10px}
+.rq-id{font-family:var(--f-mono);font-size:13px;background:var(--ink);color:var(--bg);padding:2px 9px;border-radius:6px;margin-right:6px}
+.rq h4{font-size:13px;font-family:var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--accent);font-weight:500;margin:16px 0 4px}
+.foot{margin-top:50px;border-top:1px solid var(--line);padding-block:20px 40px;color:var(--muted);font-size:13.5px}
+@media (max-width:760px){.g2,.g3{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Team guide · Yambda-50M · starting from zero</div>
+    <h1>Getting the data and using it</h1>
+    <p>Everything you need to start: what the project asks, how to download and check the data, what the files contain, and what each of the two teams has to build and answer. No earlier results are assumed.</p>
+    <div class="hero-q"><b>Main question</b><br>For the same users, is what the recommender plays broader or narrower than what the users choose themselves?</div>
+    <nav class="toc" aria-label="Sections">
+      <a href="#context">1 · The problem</a>
+      <a href="#setup">2 · Setup</a>
+      <a href="#download">3 · Download</a>
+      <a href="#files">4 · Files</a>
+      <a href="#shared">5 · Shared tables</a>
+      <a href="#rq">6 · By team</a>
+      <a href="#handoff">7 · Hand-offs</a>
+      <a href="#rules">8 · Rules</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+<section id="context" style="padding-top:30px">
+  <div class="sec-head"><span class="eyebrow">Section 1</span><h2>The problem in short</h2>
+  <p>Yambda is a log of real listening on Yandex Music. All IDs are anonymous, so we know what was played, when and how it reached the user, but not what the music is.</p></div>
+
+  <div class="grid g2">
+    <div class="box violet"><span class="tag">The key flag</span><h3><code>is_organic</code></h3>
+      <p><b>1</b> = the user chose the track (organic stream). <b>0</b> = the recommender served it (recommended stream). Our whole comparison is organic vs recommended, for the same users.</p></div>
+    <div class="box amber"><span class="tag">Caveat to settle</span><h3>"Organic" is not pure taste</h3>
+      <p>A track first discovered through a recommendation and replayed later is organic the second time. Decide, and state in the report, whether you count first discovery only or every play.</p></div>
+  </div>
+
+  <h3 class="sub">What we can and cannot do</h3>
+  <div class="grid g2">
+    <div class="box green"><span class="tag">We can</span><ul>
+      <li>Compare the two streams for the same users</li>
+      <li>Measure variety by artist ID</li>
+      <li>Describe the sound of a track with its 128-number audio embedding</li>
+      <li>Group listens into sessions and study what is played together</li>
+      <li>Use likes, dislikes and percent played as feedback</li></ul></div>
+    <div class="box red"><span class="tag">We cannot</span><ul>
+      <li>Name an artist or track, or check one by ear</li>
+      <li>Get real genres. We can only build pseudo-genres from sound or from co-listening.</li>
+      <li>See what was shown but ignored (no impressions)</li>
+      <li>Know the recommender algorithm, or anything about the users</li>
+      <li>Use calendar time. Timestamps are seconds since the start of the log.</li>
+      <li>Claim causes. Users who accept recommendations may differ from those who do not.</li></ul></div>
+  </div>
+
+  <h3 class="sub">The two teams</h3>
+  <div class="grid g2">
+    <div class="box blue"><span class="tag">Team 1 · RQ4</span><p>Are pseudo-genres real structure in the data, or just an artefact of the clustering method? Compare a sound-based grouping with a graph-based one.</p></div>
+    <div class="box blue"><span class="tag">Team 2 · RQ2 + RQ3</span><p>Do recommendations make users more alike, and which tracks are played together? Two linked questions, answered with similarity search and frequent itemsets.</p></div>
+  </div>
+</section>
+
+<section id="setup">
+  <div class="sec-head"><span class="eyebrow">Section 2</span><h2>Setup</h2>
+  <p>Run everything from the project folder. Scripts in <code>scripts/</code> work from any directory. <code>uv</code> is not installed, so use plain <code>python</code> and <code>pip</code>.</p></div>
+
+  <div class="tbl"><table>
+    <thead><tr><th>Package</th><th>Used for</th><th>Needed by</th></tr></thead>
+    <tbody>
+      <tr><td><code>pyarrow</code>, <code>numpy</code>, <code>matplotlib</code></td><td>Reading parquet, arrays, plots</td><td>Everyone</td></tr>
+      <tr><td><code>pandas</code></td><td>Tables (optional, <code>pyarrow</code> + <code>numpy</code> is enough)</td><td>Everyone</td></tr>
+      <tr><td><code>scipy</code>, <code>scikit-learn</code></td><td>Sparse matrices, ARI/NMI, reference k-means to check your own</td><td>Everyone</td></tr>
+      <tr><td><code>python-louvain</code> or <code>igraph</code> (+ <code>networkx</code>)</td><td>Louvain community detection. <code>networkx</code> works but is slow on large graphs.</td><td>Team 1</td></tr>
+    </tbody></table></div>
+  <pre><code>pip install pyarrow numpy pandas matplotlib scipy scikit-learn networkx python-louvain igraph python-dateutil</code></pre>
+  <div class="box amber"><span class="tag">Known issue</span>
+    <p>On the project lead's machine, <code>import pandas</code> failed with "No module named dateutil". <code>pip install python-dateutil</code> fixes it, which is why it is in the line above. If something else breaks, tell the group early.</p></div>
+  <div class="box blue" style="margin-top:14px"><span class="tag">Course methods</span>
+    <p>The methods in section 6 (spherical k-means, MinHash/LSH, A-Priori/PCY, Louvain) should be <b>written by you</b> and checked against a reference implementation, since the course wants the methods understood, not only called from a library. Libraries are the check, not the method.</p></div>
+</section>
+
+<section id="download">
+  <div class="sec-head"><span class="eyebrow">Section 3</span><h2>Download the data</h2>
+  <p>The dataset is <code>yandex/yambda</code> on Hugging Face (Apache 2.0). The script pins one revision (<code>dd6f3a19…448</code>), so everyone gets identical files. An interrupted download resumes when you re-run the script.</p></div>
+
+  <ol class="steps">
+    <li><b>Download events and mappings (about 477 MB).</b>
+      <pre><code>python scripts/download_yambda.py</code></pre>
+      Files land in <code>data/raw/yambda/</code>. This is enough to build the shared tables in section 5.</li>
+    <li><b>Get the audio embeddings. Only one person downloads the 13.8 GB file.</b> Yambda-50M uses about 848k of its 7.7M tracks. That person runs:
+      <pre><code>python scripts/download_yambda.py --embeddings
+python scripts/extract_embeddings_50m.py</code></pre>
+      The second command takes a few minutes and about 1–2 GB RAM. It writes three files to <code>data/processed/</code>. Everyone else copies that folder and skips the big download. In practice you need only <code>emb50m_item_ids.npy</code> and <code>emb50m_norm.npy</code>.</li>
+    <li><b>Verify.</b> Compare the file sizes with the table and the counts below.</li>
+  </ol>
+
+  <div class="tbl"><table>
+    <thead><tr><th>Path</th><th>Size</th><th>Who needs it</th></tr></thead>
+    <tbody>
+      <tr><td><code>data/raw/yambda/flat/50m/multi_event.parquet</code></td><td>about 367 MB</td><td>Everyone</td></tr>
+      <tr><td><code>data/raw/yambda/artist_item_mapping.parquet</code></td><td>about 37 MB</td><td>Team 1 (if artist nodes are used)</td></tr>
+      <tr><td><code>data/raw/yambda/album_item_mapping.parquet</code></td><td>about 53 MB</td><td>Optional</td></tr>
+      <tr><td><code>data/raw/yambda/embeddings.parquet</code></td><td>13 GB</td><td>One person only, for extraction</td></tr>
+      <tr><td><code>data/processed/emb50m_item_ids.npy</code>, <code>emb50m_norm.npy</code></td><td>3 MB + 415 MB</td><td>Both teams (sound)</td></tr>
+    </tbody></table></div>
+
+  <p style="margin-top:12px">Expected counts in <code>multi_event.parquet</code> (verified on the downloaded file): <b>47,790,449 rows</b>, <b>10,000 users</b>, 46,467,212 listens, 881,456 likes, 312,972 unlikes, 107,776 dislikes, 21,033 undislikes. About 48% of events are organic, 52% recommended.</p>
+  <pre><code>import pyarrow.parquet as pq, pyarrow.compute as pc
+t = pq.read_table("data/raw/yambda/flat/50m/multi_event.parquet")
+print(t.num_rows)                  # 47790449
+print(len(pc.unique(t["uid"])))    # 10000</code></pre>
+  <div class="box red"><span class="tag">Do not</span><p>Do not download the 500M file. It is out of scope, and loaded whole it would not fit in this machine's memory.</p></div>
+</section>
+
+<section id="files">
+  <div class="sec-head"><span class="eyebrow">Section 4</span><h2>What is in the files</h2>
+  <p>Columns as read from the files on disk.</p></div>
+  <div class="tbl"><table>
+    <thead><tr><th>File</th><th>Columns</th></tr></thead>
+    <tbody>
+      <tr><td><code>multi_event.parquet</code></td><td><code>uid</code>, <code>timestamp</code>, <code>item_id</code>, <code>is_organic</code> (0/1), <code>played_ratio_pct</code>, <code>track_length_seconds</code>, <code>event_type</code> (<code>listen</code>, <code>like</code>, <code>unlike</code>, <code>dislike</code>, <code>undislike</code>). Sorted by user and time.</td></tr>
+      <tr><td><code>artist_item_mapping.parquet</code></td><td><code>item_id</code> → <code>artist_id</code></td></tr>
+      <tr><td><code>album_item_mapping.parquet</code></td><td><code>item_id</code> → <code>album_id</code></td></tr>
+      <tr><td><code>embeddings.parquet</code></td><td><code>item_id</code>, <code>embed</code>, <code>normalized_embed</code> (128 numbers each)</td></tr>
+      <tr><td><code>emb50m_*.npy</code></td><td>Row <i>i</i> of <code>emb50m_norm.npy</code> belongs to track <code>emb50m_item_ids.npy[i]</code>. IDs are sorted.</td></tr>
+    </tbody></table></div>
+
+  <h3 class="sub">Things to know before you touch it</h3>
+  <div class="grid g2">
+    <div class="box blue"><span class="tag">Timestamps</span>
+      <p>Whole seconds since the start of the log, in steps of 5, from 0 to 26,000,000 (about 301 days). A 30-minute gap is therefore <code>1800</code>.</p></div>
+    <div class="box blue"><span class="tag">Percent played</span>
+      <p><code>played_ratio_pct</code> is not capped at 100. It reaches 159 in the data, and 0 is possible. A filter of <code>≥ 50</code> keeps about 63% of listens.</p></div>
+    <div class="box amber"><span class="tag">Memory</span>
+      <p>About 15 GB RAM, and about 5.5 GB free with other apps open. Read only the columns you need (<code>pq.read_table(path, columns=[...])</code>) and keep one job under about 8 GB.</p></div>
+    <div class="box amber"><span class="tag">Gaps</span>
+      <p>About 3% of listens have no embedding, and about 0.02% have no artist. Drop them in the steps that need them, and report how many.</p></div>
+  </div>
+</section>
+
+<section id="shared">
+  <div class="sec-head"><span class="eyebrow">Section 5</span><h2>Shared tables both teams build on</h2>
+  <p>Both teams start from the same two derived tables. If each builds its own, the numbers will not match. One person builds them first, then everyone reads them.</p></div>
+
+  <div class="grid g2">
+    <div class="box violet"><span class="tag">Table 1</span><h3>Real listens, <code>listens_50m.parquet</code></h3>
+      <p>Only <code>event_type = listen</code> and <code>played_ratio_pct ≥ 50</code> (a track played at least halfway counts as a real listen). Columns: <code>uid</code>, <code>item_id</code>, <code>timestamp</code>, <code>is_organic</code>.</p></div>
+    <div class="box violet"><span class="tag">Table 2</span><h3>Sessions, <code>sessions_50m.parquet</code></h3>
+      <p>Table 1 cut per user into sessions: a new session starts when the gap to the previous listen exceeds 30 minutes (1800 s). Columns: <code>uid</code>, <code>session_id</code>, <code>item_id</code>, <code>timestamp</code>, <code>is_organic</code>.</p></div>
+  </div>
+  <div class="box amber" style="margin-top:14px"><span class="tag">Open decision</span>
+    <p>A session can contain both organic and recommended listens. Decide once, as a team, how that is handled: assign each session to the stream of most of its listens, split it into two baskets, or drop mixed sessions. Check how many sessions are mixed before choosing, and write the choice down.</p></div>
+  <div class="box blue" style="margin-top:14px"><span class="tag">Why shared</span>
+    <p>Team 2 uses the sessions as baskets for frequent itemsets, and Team 1 uses them to build the co-listening graph. Table 1 gives Team 2 its user track sets.</p></div>
+</section>
+
+<section id="rq">
+  <div class="sec-head"><span class="eyebrow">Section 6</span><h2>What each team builds</h2>
+  <p>Each question is answered with two methods, then you compare what they say. If they agree, the finding is stronger. If they disagree, that is a result too.</p></div>
+
+  <article class="rq">
+    <span class="rq-id">Team 1</span><span class="rq-id">RQ4</span>
+    <h3>Are the pseudo-genres real structure, or an artefact of k-means?</h3>
+    <p>There are no genre labels, so any "genre" we use is made by a clustering method. If a different method gives a very different grouping, the genres are not trustworthy.</p>
+    <h4>Inputs</h4>
+    <ul><li><code>emb50m_norm.npy</code> + <code>emb50m_item_ids.npy</code> for the sound grouping, <code>sessions_50m.parquet</code> for the graph, <code>artist_item_mapping</code> if you use artist nodes.</li></ul>
+    <h4>Method A · spherical k-means on the embeddings</h4>
+    <ul>
+      <li>Write k-means that uses cosine similarity on the normalised vectors (re-normalise each centre after every update). Start with k = 32, and try a few other values.</li>
+      <li>Check it against <code>scikit-learn</code> k-means on the same data (same inertia or mean cosine, similar partition by ARI).</li>
+      <li>With millions of points, fit on a random sample and assign the rest.</li>
+      <li>Save the labels as <code>kmeans_labels_50m.parquet</code> (see section 7), since Team 2 needs them.</li>
+    </ul>
+    <h4>Method B · Louvain on a co-listening graph</h4>
+    <ul>
+      <li>Nodes are tracks (or artists). An edge connects two nodes that occur in the same session of the same user, weighted by how often.</li>
+      <li><b>Prune first.</b> About 848k tracks is too large for a plain run. Keep the top N by listens, or use artist nodes, and require a minimum edge weight.</li>
+      <li>Louvain is not deterministic, so run several seeds and a few resolution values.</li>
+    </ul>
+    <h4>What to compare</h4>
+    <ul>
+      <li>Agreement between the two groupings on the tracks both cover: ARI, NMI, overlap.</li>
+      <li>A reference scale for those numbers: a random partition with the same sizes, and k-means against k-means with a different seed. Without these, nobody can tell whether a given ARI is high.</li>
+      <li>Then the link to the main question: take the diversity measure of your choice (distinct genres per user in each stream), compute it with k-means genres and with Louvain genres, and see whether the organic-vs-recommended conclusion changes.</li>
+    </ul>
+    <h4>Pitfalls</h4>
+    <ul>
+      <li>Tracks outside the pruned graph have no community. Report coverage and compare only on shared tracks.</li>
+      <li>Build pairs inside one session of one user, never across users.</li>
+      <li>Build the graph from organic sessions first, and the recommended ones second. A recommender can shape co-listening by itself.</li>
+    </ul>
+  </article>
+
+  <article class="rq">
+    <span class="rq-id">Team 2</span><span class="rq-id">RQ2 + RQ3</span>
+    <h3>Do recommendations make users more alike, and which tracks are played together?</h3>
+    <p><b>How the two questions connect:</b> RQ2 says how alike users are, RQ3 says which track pairs are played together. A natural joint question: do the pairs behind the frequent itemsets also explain the user similarity, and do they lie in the same region of sound space?</p>
+
+    <h4>Inputs</h4>
+    <ul><li><code>listens_50m.parquet</code> (user track sets per stream), <code>sessions_50m.parquet</code> (baskets), <code>emb50m_norm.npy</code> + <code>emb50m_item_ids.npy</code> (sound), and Team 1's <code>kmeans_labels_50m.parquet</code> for the pair-to-genre link.</li></ul>
+
+    <h4>RQ2 · Method A · MinHash / LSH on track sets</h4>
+    <ul>
+      <li>For each user and stream, one set of distinct tracks. Two users are similar if their sets overlap (Jaccard similarity).</li>
+      <li>MinHash compresses each set to a short signature. LSH bands those signatures so likely-similar pairs collide, without comparing all pairs.</li>
+      <li>Write both yourself. Build an exact Jaccard baseline on a subset of users to measure the recall of your LSH, and tune the number of bands and rows.</li>
+      <li>Use only users with enough real listens in <i>both</i> streams (choose a minimum such as 50, and report how many users that leaves).</li>
+    </ul>
+    <h4>RQ2 · Method B · cosine on sound profiles</h4>
+    <ul>
+      <li>The profile of a user in a stream is the mean normalised embedding of their tracks. Users are similar if the profiles point the same way.</li>
+      <li>Optional: for each user, the nearest neighbour ("twin") in each stream.</li>
+    </ul>
+    <h4>RQ3 · Method A · frequent itemsets (A-Priori / PCY)</h4>
+    <ul>
+      <li>Sessions are baskets of tracks. Find frequent single tracks, then frequent pairs, with their support and lift, separately per stream.</li>
+      <li>PCY adds a hash table in the first pass to throw out pairs that cannot be frequent. Write A-Priori first, then PCY, and check that both give identical frequent pairs.</li>
+      <li>Compare the streams fairly: equal numbers of baskets, and similar basket-size distributions.</li>
+    </ul>
+    <h4>RQ3 · Method B · sound neighbours and session coherence</h4>
+    <ul>
+      <li>Coherence = mean pairwise cosine similarity of the tracks within one session, averaged per stream.</li>
+      <li>For the top frequent pairs, ask whether the two tracks are close in sound, and whether they share a pseudo-genre more often than random pairs do.</li>
+    </ul>
+    <h4>Where they meet</h4>
+    <ul>
+      <li>Do user pairs that LSH finds similar share frequent pairs? Does the user similarity change when you remove the tracks that occur in frequent pairs?</li>
+      <li>For the same user pairs, compare similarity by shared tracks with similarity by sound.</li>
+    </ul>
+    <h4>Pitfalls</h4>
+    <ul>
+      <li>Frequent pairs are often driven by popular tracks. Report lift next to support.</li>
+      <li>Very large numbers of users make tiny differences look "significant". Report effect sizes with intervals.</li>
+      <li>Users and sessions are in the same data, so do not treat sessions of one user as independent samples without saying so.</li>
+    </ul>
+  </article>
+</section>
+
+<section id="handoff">
+  <div class="sec-head"><span class="eyebrow">Section 7</span><h2>Files passed between people and teams</h2>
+  <p>Proposed names and dates. Agree them in the first meeting. Everything goes in <code>data/processed/</code>.</p></div>
+  <div class="tbl"><table>
+    <thead><tr><th>File</th><th>Columns</th><th>From → to</th><th>Due</th></tr></thead>
+    <tbody>
+      <tr><td><code>listens_50m.parquet</code></td><td><code>uid</code>, <code>item_id</code>, <code>timestamp</code>, <code>is_organic</code></td><td>One builder → both teams</td><td>Wed 11 Nov</td></tr>
+      <tr><td><code>sessions_50m.parquet</code></td><td><code>uid</code>, <code>session_id</code>, <code>item_id</code>, <code>timestamp</code>, <code>is_organic</code></td><td>One builder → both teams</td><td>Wed 11 Nov</td></tr>
+      <tr><td><code>kmeans_labels_50m.parquet</code></td><td><code>item_id</code>, <code>genre_k32</code> (plus settings and seed)</td><td>Team 1 → Team 2</td><td>Fri 13 Nov</td></tr>
+      <tr><td><code>louvain_labels_50m.parquet</code></td><td><code>item_id</code>, <code>community</code> (plus settings and seed)</td><td>Team 1 → Team 2 (optional second grouping)</td><td>Wed 18 Nov</td></tr>
+    </tbody></table></div>
+  <div class="box violet" style="margin-top:14px"><span class="tag">Rule</span>
+    <p>Every saved result carries the dataset size (50M), the settings (k, resolution, seed, LSH bands and rows, support threshold) and the run date, either as columns or in the file name.</p></div>
+  <div class="box blue" style="margin-top:14px"><span class="tag">Dependency</span>
+    <p>Everything starts from the two shared tables, so build them first. After that Team 1 and Team 2 work in parallel. Team 2 needs Team 1's k-means labels only for the pair-to-genre link, so it can finish RQ2 and the itemsets before they arrive.</p></div>
+</section>
+
+<section id="rules">
+  <div class="sec-head"><span class="eyebrow">Section 8</span><h2>Rules for everyone</h2></div>
+  <div class="grid g3">
+    <div class="box blue"><h3>Fair comparison</h3><ul>
+      <li>Real listens only (≥ 50% played)</li><li>Count each distinct track once, not every play</li><li>Same users in both streams</li><li>Equal sample sizes and basket sizes</li></ul></div>
+    <div class="box amber"><h3>Honest reporting</h3><ul>
+      <li>Effect sizes and intervals next to p-values</li><li>Associations, not causes</li><li>Pseudo-genres are not real genres</li><li>Say how replays of recommended tracks are handled</li></ul></div>
+    <div class="box green"><h3>Working</h3><ul>
+      <li>Write your own method, then check it against a library</li><li>Shared code in one module, notebooks only plot</li><li>One heavy job at a time</li><li>Read only needed columns</li></ul></div>
+  </div>
+</section>
+
+<footer class="foot">Sources: <code>scripts/download_yambda.py</code>, <code>scripts/extract_embeddings_50m.py</code> and the downloaded parquet files (schemas, counts and ranges read directly). Package status was checked on one machine only. Due dates are proposals. The outside method is intentionally not covered.</footer>
+</main>
+</body>
+</html>

@@ -218,3 +218,8 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Project data (too large for GitHub; download with scripts/download_yambda*.py)
+data/
+*.parquet
+*.npy

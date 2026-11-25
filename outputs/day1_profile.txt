@@ -67,8 +67,9 @@ Popularity concentration: share of each stream's listens that goes to the top 1%
 Distinct (user, item) pairs: 13,268,889   -> 3.50 listens per pair (repeat listening)
 Pairs whose FIRST listen was organic: 35.02%   recommended: 64.98%
 Pairs heard in both streams: 12.42%  (organic only: 29.74%, recommended only: 57.84%)
--> Design decision: a track found via a recommendation and replayed later counts as 'organic'
-   in the second case. Decide whether the first discovery or each play counts.
+-> Decision: the analysis assigns each (user, track) to the stream of its FIRST real listen (scripts/streams.py),
+   excluding tracks heard in the user's first 60 days (probably known before the log started).
+   Pairs under this rule: organic 12.74%, recommended 28.07%, excluded 59.19% (warm-up or no real listen)
 Repeat share within a stream (listens that are not the first of that user-item pair in that stream): organic 76.7%, recommended 58.5%
 
 ==============================================================================
@@ -111,4 +112,4 @@ users with >= 50 real organic listens in BOTH first and last third: 4,334
 days between a user's first and last listen: p0=0.0  p1=16.0  p10=61.9  p25=158.9  p50=283.2  p75=298.7  p90=300.3  p99=300.7  p100=300.9
 Note: timestamps are seconds since the dataset start (5 s bins), not calendar time.
 
-Done in 68 s
+Done in 214 s

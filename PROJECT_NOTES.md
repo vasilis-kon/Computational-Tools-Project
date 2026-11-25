@@ -21,6 +21,7 @@ Last updated: 2026-11-16. Hand-in: 4 December 2026.
 | `notebooks/01_initial_analysis.ipynb` | first organic-vs-recommended comparison |
 | `notebooks/02_broaden_or_narrow_three_methods.ipynb` | diversity, MinHash/LSH (own), A-Priori/PCY (own) |
 | `notebooks/03_embeddings_sound_analysis.ipynb` | embeddings: audio spread, own spherical k-means pseudo-genres, session coherence, user similarity |
+| `notebooks/04_louvain_sound_graph.ipynb` | NB04: RQ4 Method B (Louvain), one half of RQ4: own Louvain on a kNN graph of audio embeddings (top 50k tracks), tests vs networkx, stability sweep |
 | `data/raw/yambda/` | raw files (50M events, mappings, embeddings) |
 | `data/processed/` | extracted 50M embeddings |
 
@@ -40,6 +41,7 @@ Run everything from any folder with `python ...` (`uv` is not installed). Notebo
 - Own implementations, each validated: MinHash/LSH vs exact Jaccard (S-curve matches theory, recall 0.87-0.90 with 4% of pairs checked), A-Priori and PCY vs a naive counter (identical; PCY counts about 100x fewer candidates), spherical k-means vs scikit-learn (same mean cosine 0.683 vs 0.682, ARI about 0.7).
 - Effect sizes are modest (+28% artists, -6% audio spread, about 2 genres of 16); the tiny p-values come from the sample size.
 - `reports/*.html` still show the numbers of the old per-listen rule.
+- RQ4 Method B (NB04, one half of RQ4): d = 30, k = 20, γ = 1 → 26-28 groups, seed ARI 0.77, artist purity 0.85 (k-means 0.79); ARI vs k-means pseudo-genres 0.43. The RQ4 comparison itself is still open.
 
 ## 4. Machine limits
 15.2 GB RAM (only about 5.5 GB free with other apps open), 16 logical CPUs, about 93 GB free disk, Windows. Close heavy apps before big runs and keep one run under about 8 GB.

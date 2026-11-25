@@ -1,0 +1,13 @@
+listening_partition,sound_partition,ARI,NMI
+"listening k-means, k = 28",Louvain (28 groups),0.20624418619355672,0.40610938195174184
+"listening k-means, k = 28",k-means project file (k = 32),0.20463328840424055,0.420028755227567
+"listening k-means, k = 28","k-means, k = 28",0.2022162358473955,0.4204630323556089
+"listening k-means, k = 28","k-means, k = 32",0.21911777990793346,0.4297453974441408
+"listening k-means, k = 32",Louvain (28 groups),0.19725959661808903,0.40343439548745014
+"listening k-means, k = 32",k-means project file (k = 32),0.18920743535160037,0.4165200970448614
+"listening k-means, k = 32","k-means, k = 28",0.1885579197166107,0.41743990366232026
+"listening k-means, k = 32","k-means, k = 32",0.20381985156913618,0.4261503964748869
+listening Louvain (kNN graph),Louvain (28 groups),0.23848182370147739,0.40896330370901185
+listening Louvain (kNN graph),k-means project file (k = 32),0.22693641013000865,0.4093185448686718
+listening Louvain (kNN graph),"k-means, k = 28",0.23330688071537609,0.41430952937554905
+listening Louvain (kNN graph),"k-means, k = 32",0.23909099703898765,0.42169672493104315

@@ -1,0 +1,13 @@
+part,metric,organic,recommended,relative difference,recommended is
+1 sessions,session coherence (real),0.4642557196927314,0.41940050731812206,-0.09661746850269683,broader
+1 sessions,session coherence excess over shuffled,0.20316511318087577,0.09646269130344326,-0.5252005140392212,broader
+1 sessions,nearest-neighbour coherence (real),0.6231040896280952,0.591852040135676,-0.05015542348802775,broader
+1 sessions,nearest-neighbour coherence excess over shuffled,0.17459553331136712,0.08573799003516475,-0.5089336570697783,broader
+1 sessions,same-pseudo-genre share of track pairs (real),0.35082437403865974,0.2973552858798761,-0.15240984411445577,broader
+1 sessions,same-pseudo-genre share of track pairs excess over shuffled,0.20012688460964323,0.10346339820024031,-0.48301099873687403,broader
+2 sound neighbours,co-played pairs: median rank pct,0.04004,0.053349999999999995,0.3324175824175823,broader
+2 sound neighbours,co-played pairs: share in nearest 1%,0.33464,0.23466,-0.2987688262012909,broader
+2 sound neighbours,nearest-1% excess over shuffled,0.24214,0.11482,-0.5258115140001651,broader
+3 link to method A,cos excess,0.6327855587005615,0.5819302797317505,-0.0803673192858696,broader
+3 link to method A,same-genre excess,0.5461176754854375,0.6277765957540339,0.14952623570736964,narrower
+3 link to method A,"Spearman(lift, cos)",0.35870394564587005,0.34186324217017067,-0.046948754481572784,broader

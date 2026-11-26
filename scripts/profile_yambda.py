@@ -9,7 +9,8 @@ Memory: about 3-4 GB at the peak. Runtime: a few minutes.
 Definitions used here (change them at the top if the team decides otherwise):
     real listen = played_ratio_pct >= REAL_LISTEN_PCT
     session     = listens of one user with gaps of at most SESSION_GAP_S
-    stream      = organic (is_organic == 1) or recommended (is_organic == 0)
+    stream      = organic (is_organic == 1) or recommended (is_organic == 0), per listen;
+                  section D also reports the first-discovery rule used by the notebooks (scripts/streams.py)
 """
 
 import time
@@ -19,9 +20,12 @@ import numpy as np
 import pandas as pd
 import pyarrow.parquet as pq
 
+from streams import stream_labels
+
 REAL_LISTEN_PCT = 50
 SESSION_GAP_S = 30 * 60      # timestamps are in seconds (binned to 5 s)
 MIN_REAL = 50                # "enough listens" threshold for per-user comparisons
+WARMUP_DAYS = 60             # first-discovery rule: tracks heard in a user's first 60 days are excluded
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data" / "raw" / "yambda"
@@ -177,8 +181,11 @@ has_org = np.bincount(inverse, weights=(org == 1), minlength=n_pairs) > 0
 has_rec = np.bincount(inverse, weights=(org == 0), minlength=n_pairs) > 0
 out(f"Pairs heard in both streams: {pct((has_org & has_rec).sum(), n_pairs)}  "
     f"(organic only: {pct((has_org & ~has_rec).sum(), n_pairs)}, recommended only: {pct((~has_org & has_rec).sum(), n_pairs)})")
-out("-> Design decision: a track found via a recommendation and replayed later counts as 'organic'")
-out("   in the second case. Decide whether the first discovery or each play counts.")
+out("-> Decision: the analysis assigns each (user, track) to the stream of its FIRST real listen (scripts/streams.py),")
+out(f"   excluding tracks heard in the user's first {WARMUP_DAYS} days (probably known before the log started).")
+lab_pair = stream_labels(uidx, item, org, ratio, ts, REAL_LISTEN_PCT, "discovery", WARMUP_DAYS)[first_idx]
+out(f"   Pairs under this rule: organic {pct((lab_pair == 1).sum(), n_pairs)}, recommended {pct((lab_pair == 0).sum(), n_pairs)}, "
+    f"excluded {pct((lab_pair < 0).sum(), n_pairs)} (warm-up or no real listen)")
 repeat_org = 1 - len(np.unique(key[org == 1])) / (org == 1).sum()
 repeat_rec = 1 - len(np.unique(key[org == 0])) / (org == 0).sum()
 out(f"Repeat share within a stream (listens that are not the first of that user-item pair in that stream): "

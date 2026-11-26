@@ -1,0 +1,10 @@
+part,metric,organic,recommended,relative difference,recommended is
+1 sessions,session coherence (real),0.47668535113334654,0.4167838304761856,-0.12566260010873345,broader
+1 sessions,session coherence excess over shuffled,0.18783309092719316,0.08691797574099741,-0.5372595142211226,broader
+1 sessions,nearest-neighbour coherence (real),0.6852095637666552,0.6346060126605961,-0.07385120375128312,broader
+1 sessions,nearest-neighbour coherence excess over shuffled,0.1509734258946518,0.0717543302005843,-0.524722117317163,broader
+1 sessions,same-pseudo-genre share of track pairs (real),0.35946857375428803,0.30221806907200166,-0.15926428306197224,broader
+1 sessions,same-pseudo-genre share of track pairs excess over shuffled,0.18622366006086938,0.09916111367724273,-0.46751603075124415,broader
+2 sound neighbours,co-played pairs: median rank pct,0.03614,0.05216,0.44327614831211953,broader
+2 sound neighbours,co-played pairs: share in nearest 1%,0.33644,0.22794,-0.3224943526334562,broader
+2 sound neighbours,nearest-1% excess over shuffled,0.23482,0.1047,-0.5541265650285325,broader

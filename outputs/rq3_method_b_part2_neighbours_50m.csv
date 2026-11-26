@@ -1,0 +1,5 @@
+stream,pairs,n,median rank pct,share in nearest 1%,share in nearest 5%
+organic,co-played,50000,0.03614,0.33644,0.54702
+organic,shuffled,50000,0.19036999999999998,0.10162,0.25902
+recommended,co-played,50000,0.05216,0.22794,0.49254
+recommended,shuffled,50000,0.12677,0.12324,0.32268

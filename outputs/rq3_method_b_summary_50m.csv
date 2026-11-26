@@ -8,6 +8,6 @@ part,metric,organic,recommended,relative difference,recommended is
 2 sound neighbours,co-played pairs: median rank pct,0.04004,0.053349999999999995,0.3324175824175823,broader
 2 sound neighbours,co-played pairs: share in nearest 1%,0.33464,0.23466,-0.2987688262012909,broader
 2 sound neighbours,nearest-1% excess over shuffled,0.24214,0.11482,-0.5258115140001651,broader
-3 link to method A,cos excess,0.437727153301239,0.6159600615501404,0.4071781039237976,narrower
-3 link to method A,same-genre excess,0.3587616217710213,0.734186374591548,1.0464462474197997,narrower
-3 link to method A,"Spearman(lift, cos)",0.42394051827299284,0.5604515364158015,0.3220051216121398,narrower
+3 link to method A,cos excess,0.6327855587005615,0.5819302797317505,-0.0803673192858696,broader
+3 link to method A,same-genre excess,0.5461176754854375,0.6277765957540339,0.14952623570736964,narrower
+3 link to method A,"Spearman(lift, cos)",0.35870394564587005,0.34186324217017067,-0.046948754481572784,broader

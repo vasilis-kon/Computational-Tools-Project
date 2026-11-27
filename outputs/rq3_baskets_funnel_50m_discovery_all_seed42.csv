@@ -1,0 +1,8 @@
+step,listens,users,organic,recommended
+all listens,46467212.0,9238,,
+D1 real listens (>= 50% played),29439278.0,9209,,
+D2 stream label known,14370437.0,8214,,
+D5 users with >= 100 tracks in both streams,10615375.0,3572,,
+D4 baskets with >= 2 tracks,,3572,484776.0,613295.0
+D6 at most 100 baskets per user and stream,,3572,280741.0,294484.0
+D7 matched basket sizes,,3572,258897.0,258897.0
